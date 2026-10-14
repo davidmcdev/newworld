@@ -27,9 +27,9 @@ def event_table(event_type, columns):
 
     table = table.reindex(columns=['run_id', 'event_index', 'tick', 'villager_id', 'prey_type', 'simulation_day'])
 
-    assert table[selected].notna().all().all(), 'Faltan campos obligatorios'
-
     if not table.empty:
+        assert table[selected].notna().all().all(), 'Faltan campos obligatorios'
+
         table['simulation_day'] = table['tick'] // 12000
 
     return table
