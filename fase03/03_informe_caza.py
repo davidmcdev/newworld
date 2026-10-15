@@ -16,7 +16,7 @@ else:
     total_cacerias = len(hunts)
     recuento_por_prey_type = hunts['prey_type'].sort_values(ascending=False).value_counts()
     porcentaje_tipo_presa = (hunts['prey_type'].value_counts(normalize=True) * 100).round(1)
-    recuento_por_simulation_day = hunts['simulation_day'].sort_index().value_counts()
+    recuento_por_simulation_day = hunts['simulation_day'].value_counts().sort_index()
 
 print('Total de cacerías:', total_cacerias)
 if not hunts.empty:
@@ -43,15 +43,15 @@ print('Balance neto:', balance_neto)
 
 assert recuento_por_prey_type.sum() == total_cacerias, 'La suma de los recuentos por presa no coincide con el total de cacerías'
 
-
 total_incrementos = incrementos['amount_delta'].sum()
 total_decrementos = decrementos['amount_delta'].sum()
 assert(total_incrementos - total_decrementos), 'Los incrementos menos las reducciones no coinciden con el balance de comida'
 
 resumen_final = pd.DataFrame([
     {'metric': 'hunt_events', 'value': len(hunts)},
-    {'metric': 'food_change_events', 'value': '-'},
+    {'metric': 'food_change_events', 'value': len(comidas)},
     {'metric': 'food_gains', 'values': incrementos.groupby('resource_type')['amount_delta'].sum()},
+    {'metric': 'food_reductions', 'values': decrementos.value_counts().sum()},
     {'metric': 'food_net_change', 'value': balance_neto}
 ])
 
